@@ -6,25 +6,22 @@ import sys
 import fitness
 import selector
 
-
 # options
-mu = 256				# population size
-inputDim = 1			# search space dimension
-outputDim = 2			# number of objectives
+mu = 256		# population size
+inputDim = 1		# search space dimension
+outputDim = 2		# number of objectives
 maxGenerations = 100	# maximum number of generations
-
-plotPoints = True
 
 # external strategy parameters
 pTarget = pow(5 + math.sqrt(0.5), -1) 	# target success probability
-dDamping = 1 + mu/2 					# step size damping
+dDamping = 1 + mu/2 			# step size damping parameter
 cSuccRateParam = pTarget/(2 + pTarget)	# success rate averaging parameter
-cCumulTimeParam = 2/(2 + mu)			# cumulation time horizon parameter
-cCov = 2/(pow(mu,2) + 6)				# covariance matrix learning rate
-pThresh = 0.44							# pthreshold
+cCumulTimeParam = 2/(2 + mu)		# cumulation time horizon parameter
+cCov = 2/(pow(mu,2) + 6)		# covariance matrix learning rate
+pThresh = 0.44				# pthreshold
 
 
-# --------------------------- Individual ---------------------------------#
+# ---------------------------- Individual ---------------------------------#
 class Individual:
 
 
@@ -44,15 +41,14 @@ class Individual:
 	def dominates(self, other):
 		temp = False
 		for i in range(self.outputDim):
-
+			
 			# check whether x[i] <= y[i] for all
 			if self.fitness[i] > other.fitness[i]:		
 				return False
-
+			
 			# check whether exists x[i] < y[i]
 			if self.fitness[i] < other.fitness[i]:		
 				temp = True
-
 		return temp
 
 	def updateStepSize(self):
@@ -93,16 +89,16 @@ class Individual:
 
 
 
-# ---------------------------- MO-CMA-ES ----------------------------------#
+# ----------------------------- MO-CMA-ES ----------------------------------#
 
 
 # initialization
 print('Initialization.')
 
-initialSigma = 5.0						# initial sigma and initial mean determine
-initialMean = np.zeros(inputDim)		# the distribution of the initial population
+initialSigma = 5.0				# initial sigma and initial mean determine..
+initialMean = np.zeros(inputDim)		# ..the distribution of the initial population
 
-currentPop = []							# create an initial population in initialMean +- 2*initialSigma
+currentPop = []					# create an initial population in initialMean +- 2*initialSigma
 for i in range(mu):
 	xi = np.random.rand(inputDim)*4*initialSigma - 2*initialSigma
 	Ci = np.identity(inputDim)
@@ -133,24 +129,9 @@ for g in range(0,maxGenerations):
 	# step 3: selection
 	currentPop = selector.selectBest(Q, mu)
 
-	# optional plot
-	if plotPoints:
-		for i in range(mu):
-			plt.plot(currentPop[i].fitness[0], currentPop[i].fitness[1], 'wo')
-
 # end
 print('')
 print('Final Population:')
 for i in range(mu):
 	print('Individual ', i, ': f(', currentPop[i].x, ') = ', currentPop[i].fitness)
-print('Finishing.')
-
-if plotPoints:
-	for i in range(mu):
-		plt.plot(currentPop[i].fitness[0], currentPop[i].fitness[1], 'go')
-
-	plt.xlabel('Objective 1')
-	plt.ylabel('Objective 2')
-	plt.title('Test function')
-	plt.tight_layout()
-	plt.savefig('pareto_front.png')
+print('Done.')
