@@ -1,17 +1,17 @@
 import numpy as np
 import math
 
-MAX = pow(10,2)		# crowding distance that is assigned to min and max points
+MAX = pow(10,2)	# crowding distance that is assigned to min and max points
 
 # computes the crowding distance for each individual in the list
 def computeCrowdingDistances(individuals, n, dim):
 
-	crowdingDistances = np.zeros(n)		# array to store the crowding distance of each individual
-	dimi = np.zeros(n)					# temporary array to store fitness values of dimension i
+	crowdingDistances = np.zeros(n)		# stores the crowding distance of each individual
+	dimi = np.zeros(n)			# stores fitness values of dimension i
 
+	# for each i sort the fitness values of the individuals by their i-th dimension
 	for i in range(dim):
-
-		# for each dimension i sort individuals by fitness[i]							
+		
 		for j in range(n):
 			dimi[j] = individuals[j].fitness[i]
 
